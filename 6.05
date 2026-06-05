@@ -1,0 +1,89 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+
+struct Supplier {
+    char name[20];
+    char country[20];
+    double local_price;
+    double exchange_rate;
+    int distance;
+    double final_cost;
+};
+
+
+int input_supplier_data(struct Supplier list[]) {
+    int count = 0;
+    printf("=== 공급망 데이터 입력 (그만하려면 이름에 exit 입력) ===\n");
+
+    while (count < 30) {
+        printf("\n[%d번째 회사 정보 입력]\n", count + 1);
+        printf(" -> 회사 이름: ");
+        scanf("%s", list[count].name);
+
+        if (strcmp(list[count].name, "exit") == 0) break;
+
+        printf(" -> 수입 국가 (예: Japan, USA): ");
+        scanf("%s", list[count].country);
+
+        printf(" -> 현지 화폐 기준 단가: ");
+        scanf("%lf", &list[count].local_price);
+
+        printf(" -> 현재 환율: ");
+        scanf("%lf", &list[count].exchange_rate);
+
+        printf(" -> 운송 거리(km): ");
+        scanf("%d", &list[count].distance);
+
+        count++;
+    }
+    return count;
+}
+
+void calculate_costs(struct Supplier list[], int count) {
+    for (int i = 0; i < count; i++) {
+
+       
+        list[i].final_cost = list[i].local_price * list[i].exchange_rate;
+
+
+        if (list[i].distance > 5000) {
+            int extra_distance = list[i].distance - 5000;
+            list[i].final_cost += (extra_distance * 1000.0);
+        }
+    }
+}
+
+int main() {
+    struct Supplier s_list[30];
+    int total_count = 0;
+
+    total_count = input_supplier_data(s_list);
+    calculate_costs(s_list, total_count);
+
+   
+    int best_index = 0;
+    for (int i = 1; i < total_count; i++) {
+        if (s_list[i].final_cost < s_list[best_index].final_cost) {
+            best_index = i;
+        }
+    }
+
+    printf("\n==================================================================\n");
+    printf("                  SEMICONDUCTOR SUPPLY CHAIN REPORT               \n");
+    printf("==================================================================\n");
+    for (int i = 0; i < total_count; i++) {
+        printf("Company: %-10s | Country: %-7s | Total Cost: %-11.0f KRW\n",
+            s_list[i].name, s_list[i].country, s_list[i].final_cost);
+    }
+    printf("------------------------------------------------------------------\n");
+
+    if (total_count > 0) {
+        printf(" [FINAL DECISION RESULT]\n");
+        printf(" -> 가장 만족하는 최적의 회사는 [%s (%s)] 입니다.\n",
+            s_list[best_index].name, s_list[best_index].country);
+    }
+    printf("==================================================================\n");
+
+    return 0;
+}
