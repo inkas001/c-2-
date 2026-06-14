@@ -12,14 +12,13 @@ struct Supplier {
 };
 
 int main() {
-    // 1학년 실습 수준을 고려해, 깔끔하게 '2개 업체'를 직접 입력받아 비교하는 구조로 설정합니다.
+    
     struct Supplier list[2]; 
 
     printf("==================================================================\n");
     printf("         SEMICONDUCTOR SUPPLY CHAIN DATA INPUT SECTION            \n");
     printf("==================================================================\n");
 
-    // 1. 사용자로부터 2개 업체의 데이터를 직접 입력받음
     for (int i = 0; i < 2; i++) {
         printf("\n[ 회사 %d번 정보 입력 ]\n", i + 1);
         
@@ -43,7 +42,7 @@ int main() {
         scanf_s("%d", &list[i].lead_time);
     }
 
-    // 2. 전략 모드 선택 단계
+   
     int user_mode = 0;
     printf("\n==================================================================\n");
     printf(" SELECT PURCHASING STRATEGY MODE\n");
@@ -53,7 +52,6 @@ int main() {
     printf("Enter mode number (1 or 2): ");
     scanf_s("%d", &user_mode);
 
-    // 3. 연산 가동 (환율 변환 및 14일 초과 리드타임 페널티)
     for (int i = 0; i < 2; i++) {
         if (strcmp(list[i].country, "Japan") == 0 || strcmp(list[i].country, "japan") == 0) {
             list[i].final_cost = list[i].local_price * (list[i].exchange_rate / 100.0);
@@ -67,7 +65,6 @@ int main() {
         }
     }
 
-    // 4. 의사결정 매칭 알고리즘
     int best_index = 0;
     if (user_mode == 2) {
         if (list[1].quality > list[0].quality) best_index = 1;
@@ -75,7 +72,6 @@ int main() {
         if (list[1].final_cost < list[0].final_cost) best_index = 1;
     }
 
-    // 5. 최종 리포트 출력
     printf("\n==================================================================\n");
     printf("                  SEMICONDUCTOR SUPPLY CHAIN REPORT               \n");
     printf("==================================================================\n");
